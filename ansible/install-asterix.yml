@@ -9,7 +9,7 @@
 
     - name: Create Asterix working directories
       file:
-        path: {{ item }}
+        path: "{{ item }}"
         state: directory
       with_items:
         - /hd1/asterix/logs
@@ -42,5 +42,5 @@
 
     - name: Start CC
       shell: >
-        nohup /home/couchbase/asterix-install/bin/asterixcc -config-file /hd1/asterix.conf < /dev/null > /hd1/asterix/cc.log 2>&1 &
+        nohup /home/couchbase/asterix-install/bin/asterixcc -config-file /hd1/asterix.conf < /dev/null > /hd1/asterix/logs/cc.log 2>&1 &
 
