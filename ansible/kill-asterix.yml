@@ -4,3 +4,10 @@
   tasks:
     - name: Kill all Asterix processes
       shell: 'kill $(jps | egrep ''(CDriver|NCService)'' | awk ''{print $1}'')'
+      
+    - name: Remove Asterix installation directory
+      file:
+        path: /home/couchbase/asterix-install
+        state: absent
+
+

@@ -36,7 +36,7 @@ cp $WORKSPACE/asterixdb/asterixdb/asterix-server/target/*.zip $rootdir/ansible
 # Install AsterixDB using Ansible
 echo @@@ INSTALLING ASTERIXDB @@@
 cd $rootdir/ansible
-ansible-playbook -i inventory asterix-install.yml
+ansible-playbook -i inventory install-asterix.yml
 
 # Actual perf test!
 echo @@@@ RUNNING PERF EXPERIMENT @@@@
@@ -45,6 +45,7 @@ HOST1=172.23.100.190
 JAVA_OPTS="-Djava.security.egd=file:/dev/urandom -Djava.rmi.server.hostname=$HOST1" bash -x \
   $WORKSPACE/asterix-experiments/asterix-experiments-0.8.9-SNAPSHOT-binary-assembly/bin/lsmexprunner \
   -ler $WORKSPACE/asterix-experiments/asterix-experiments-0.8.9-SNAPSHOT-binary-assembly/ \
+  -mh ignored -jh ignored -u ignored \
   -rh $HOST1 -rp 19002 -regex '.*PresetClusterPerfBuilder.*'
 
 cp $WORKSPACE/asterix-experiments/target/asterix-experiments-0.8.9-SNAPSHOT-binary-assembly/agg_results.csv \
