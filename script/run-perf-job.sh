@@ -1,12 +1,17 @@
 #!/bin/bash -ex
 
 # Clean up any old run and make new space
+cd $HOME
 rm -rf asterix-perf-workspace
 mkdir asterix-perf-workspace
 cd asterix-perf-workspace
 export WORKSPACE=`pwd`
 
-# Download latest build source code
+# Remember this root directory
+scriptdir=`dirname $0`
+rootdir=`cd $scriptdir/..; pwd`
+
+# Download and build latest build source code
 export BLD_NUM=`curl http://172.23.120.24/builds/latestbuilds/analytics/0.8.9/latestBuildNumber`
 echo @@@@ DOWNLOADING SOURCE FOR BUILD $BLD_NUM @@@@
 curl -o analytics-source.tar.gz \
@@ -20,9 +25,15 @@ cd asterixdb
 export JAVA_HOME=/usr/java/latest
 mvn clean package -DskipTests
 
-echo @@@@ COPYING LSMEXPERIMENTS AND INSTALLER @@@@
+echo @@@@ COPYING LSMEXPERIMENTS @@@@
 cp -R $WORKSPACE/asterixdb/asterixdb/asterix-experiments/target $WORKSPACE/asterix-experiments/
-cp -R $WORKSPACE/asterixdb/asterixdb/asterix-installer/target $WORKSPACE/asterix-installer/
+
+# Install AsterixDB using Ansible
+echo @@@ INSTALLING ASTERIXDB @@@
+cd $rootdir/ansible
+ansible-playbook -i inventory playbook.yml
+
+
 
 echo @@@@ RUNNING PERF EXPERIMENT @@@@
 
