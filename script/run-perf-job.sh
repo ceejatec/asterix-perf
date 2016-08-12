@@ -40,7 +40,7 @@ ansible-playbook -i inventory install-asterix.yml
 
 # Actual perf test!
 echo @@@@ RUNNING PERF EXPERIMENT @@@@
-HOST1=172.23.100.190
+HOST1=172.23.100.191
 
 JAVA_OPTS="-Djava.security.egd=file:/dev/urandom -Djava.rmi.server.hostname=$HOST1" bash -x \
   $WORKSPACE/asterix-experiments/asterix-experiments-0.8.9-SNAPSHOT-binary-assembly/bin/lsmexprunner \

@@ -7,6 +7,16 @@
         path: /home/couchbase/asterix-install
         state: directory
 
+    - name: Create Asterix working directories
+      file:
+        path: {{ item }}
+        state: directory
+      with_items:
+        - /hd1/asterix/logs
+        - /hd2/asterix
+        - /hd3/asterix
+        - /hd4/asterix
+
     - name: Download and unpack Asterix
       unarchive:
         src: asterix-server-0.8.9-SNAPSHOT-binary-assembly.zip
@@ -20,7 +30,7 @@
   tasks:
     - name: Start NC Service
       shell: >
-        nohup /home/couchbase/asterix-install/bin/asterixncservice < /dev/null > /hd1/ncservice.log 2>&1 &
+        nohup /home/couchbase/asterix-install/bin/asterixncservice < /dev/null > /hd1/asterix/logs/ncservice.log 2>&1 &
 
 - hosts: cc
 
@@ -29,8 +39,8 @@
       copy:
         src: asterix.conf
         dest: /hd1
-        
+
     - name: Start CC
       shell: >
-        nohup /home/couchbase/asterix-install/bin/asterixcc -config-file /hd1/asterix.conf < /dev/null > /hd1/cc.log 2>&1 &
+        nohup /home/couchbase/asterix-install/bin/asterixcc -config-file /hd1/asterix.conf < /dev/null > /hd1/asterix/cc.log 2>&1 &
 
