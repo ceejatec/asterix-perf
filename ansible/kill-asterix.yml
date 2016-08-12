@@ -1,0 +1,6 @@
+---
+- hosts: all
+
+  tasks:
+    - name: Kill all Asterix processes
+      shell: 'kill $(jps | egrep ''(CDriver|NCService)'' | awk ''{print $1}'')'
