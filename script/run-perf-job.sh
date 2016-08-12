@@ -1,14 +1,14 @@
 #!/bin/bash -ex
 
+# Remember this root directory
+rootdir=$(cd $(dirname $0)/..; pwd)
+
 # Clean up any old run and make new space
 cd $HOME
 rm -rf asterix-perf-workspace
 mkdir asterix-perf-workspace
 cd asterix-perf-workspace
 export WORKSPACE=`pwd`
-
-# Remember this root directory
-rootdir=$(cd $(dirname $0)/..; pwd)
 
 # Download and build latest build source code
 export BLD_NUM=`curl http://172.23.120.24/builds/latestbuilds/analytics/0.8.9/latestBuildNumber`
