@@ -11,10 +11,11 @@ cd asterix-perf-workspace
 export WORKSPACE=`pwd`
 
 # Download and build latest build source code
-export BLD_NUM=`curl http://172.23.120.24/builds/latestbuilds/analytics/0.8.9/latestBuildNumber`
+export VERSION=0.8.9-ceej
+export BLD_NUM=`curl http://172.23.120.24/builds/latestbuilds/analytics/$VERSION/latestBuildNumber`
 echo @@@@ DOWNLOADING SOURCE FOR BUILD $BLD_NUM @@@@
 curl -o analytics-source.tar.gz \
-  http://172.23.120.24/builds/latestbuilds/analytics/0.8.9/$BLD_NUM/analytics-0.8.9-$BLD_NUM-source.tar.gz
+  http://172.23.120.24/builds/latestbuilds/analytics/$VERSION/$BLD_NUM/analytics-$VERSION-$BLD_NUM-source.tar.gz
 
 echo @@@@ UNPACKING SOURCE @@@@
 tar xzf analytics-source.tar.gz
@@ -42,16 +43,11 @@ ansible-playbook -i inventory playbook.yml
 echo @@@@ RUNNING PERF EXPERIMENT @@@@
 
 HOST1=172.23.100.190
-ORCH_HOST=172.23.100.194
 
 JAVA_OPTS="-Djava.security.egd=file:/dev/urandom -Djava.rmi.server.hostname=$HOST1" bash -x \
   $WORKSPACE/asterix-experiments/asterix-experiments-0.8.9-SNAPSHOT-binary-assembly/bin/lsmexprunner \
-  -d 3600 -di 1000 -qd 3600 -k /home/couchbase/.ssh/analytics_rsa \
   -ler $WORKSPACE/asterix-experiments/asterix-experiments-0.8.9-SNAPSHOT-binary-assembly/ \
-  -mh $WORKSPACE/asterix-installer/asterix-installer-0.8.9-SNAPSHOT-binary-assembly/ \
-  -jh /usr/java/jdk1.8.0_102/jre \
-  -dsti 0 -dstq 0 -si 1 -ni 10 -oh $ORCH_HOST -op 10102 \
-  -rh $HOST1 -rp 19002 -qoh $HOST1 -qop 10101 -u couchbase -regex '.*TestAgg.*'
+  -rh $HOST1 -rp 19002 -regex '.*PresetClusterPerfBuilder.*'
 
 cp $WORKSPACE/asterix-experiments/target/asterix-experiments-0.8.9-SNAPSHOT-binary-assembly/agg_results.csv \
 $WORKSPACE
