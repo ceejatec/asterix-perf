@@ -8,8 +8,7 @@ cd asterix-perf-workspace
 export WORKSPACE=`pwd`
 
 # Remember this root directory
-scriptdir=`dirname $0`
-rootdir=`cd $scriptdir/..; pwd`
+rootdir=$(cd $(dirname $0)/..; pwd)
 
 # Download and build latest build source code
 export BLD_NUM=`curl http://172.23.120.24/builds/latestbuilds/analytics/0.8.9/latestBuildNumber`
@@ -25,8 +24,13 @@ cd asterixdb
 export JAVA_HOME=/usr/java/latest
 mvn clean package -DskipTests
 
+# Copy LSM Experiments driver for local running
 echo @@@@ COPYING LSMEXPERIMENTS @@@@
 cp -R $WORKSPACE/asterixdb/asterixdb/asterix-experiments/target $WORKSPACE/asterix-experiments/
+
+# Copy asterix-server tarball for Ansible to deploy
+echo @@@ COPYING ASTERIX-SERVER @@@
+cp $WORKSPACE/asterixdb/asterixdb/asterix-server/target/*.zip $rootdir/ansible
 
 # Install AsterixDB using Ansible
 echo @@@ INSTALLING ASTERIXDB @@@
