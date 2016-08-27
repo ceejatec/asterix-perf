@@ -1,5 +1,10 @@
 #!/bin/bash -ex
 
+# Arguments: Gerrit server, project, and change
+gerrit_server=$1
+gerrit_project=$2
+gerrit_refspec=$3
+
 # Remember this root directory
 rootdir=$(cd $(dirname $0)/..; pwd)
 
@@ -11,7 +16,7 @@ cd asterix-perf-workspace
 export WORKSPACE=`pwd`
 
 # Download and build latest build source code
-export VERSION=0.8.9-ceej
+export VERSION=0.8.9
 export BLD_NUM=`curl http://172.23.120.24/builds/latestbuilds/analytics/$VERSION/latestBuildNumber`
 echo @@@@ DOWNLOADING SOURCE FOR BUILD $BLD_NUM @@@@
 curl -o analytics-source.tar.gz \
@@ -19,6 +24,18 @@ curl -o analytics-source.tar.gz \
 
 echo @@@@ UNPACKING SOURCE @@@@
 tar xzf analytics-source.tar.gz
+
+if [ "x$gerrit_refspec" != "x" ]
+then
+  echo @@@@ APPLYING PATCH @@@@
+  (
+    cd `repo forall $gerrit_project -c pwd`
+    git config user.name "Couchbase Build Team"
+    git config user.email "build-team@couchbase.com"
+    git fetch $gerrit_server/$gerrit_project $gerrit_refspec
+    git cherry-pick FETCH_HEAD
+  )
+fi
 
 echo @@@@ BUILDING @@@@
 cd asterixdb
