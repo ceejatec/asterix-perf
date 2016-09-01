@@ -16,7 +16,7 @@ cd asterix-perf-workspace
 export WORKSPACE=`pwd`
 
 # Download and build latest build source code
-export VERSION=0.8.9
+export VERSION=1.0.0
 export BLD_NUM=`curl http://172.23.120.24/builds/latestbuilds/analytics/$VERSION/latestBuildNumber`
 echo @@@@ DOWNLOADING SOURCE FOR BUILD $BLD_NUM @@@@
 curl -o analytics-source.tar.gz \
@@ -59,6 +59,8 @@ ansible-playbook -i inventory install-asterix.yml
 echo @@@@ RUNNING PERF EXPERIMENT @@@@
 HOST1=172.23.100.191
 
+# These references to "0.8.9" are correct for the moment, since they are
+# determined by the AsterixDB Maven version, not the Analytics Build version
 JAVA_OPTS="-Djava.security.egd=file:/dev/urandom -Djava.rmi.server.hostname=$HOST1" bash -x \
   $WORKSPACE/asterix-experiments/asterix-experiments-0.8.9-SNAPSHOT-binary-assembly/bin/lsmexprunner \
   -ler $WORKSPACE/asterix-experiments/asterix-experiments-0.8.9-SNAPSHOT-binary-assembly/ \
